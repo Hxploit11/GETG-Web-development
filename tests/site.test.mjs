@@ -4,7 +4,7 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer, parseRange } from '../scripts/serve.mjs';
-import { videos, videosForLocale, animatedVideos, solutionVideos, fieldImages } from '../src/media.mjs';
+import { videos, videosForLocale, animatedVideos, generatedVideos, solutionVideos, fieldImages } from '../src/media.mjs';
 
 const dist=fileURLToPath(new URL('../dist/',import.meta.url));
 const routes=['/en/','/en/who-we-are/','/en/solutions/','/en/in-the-field/','/en/privacy/','/es/','/es/quienes-somos/','/es/soluciones/','/es/en-campo/','/es/privacidad/'];
@@ -16,7 +16,7 @@ test('all localized pages resolve their local assets and links, with one H1 and 
     assert.match(html,/<link rel="alternate" hreflang="en"/);
     assert.match(html,/<link rel="alternate" hreflang="es"/);
     assert.doesNotMatch(html,/>Products</);
-    assert.doesNotMatch(html,/Field media supplied by GETG|Material de campo compartido por GETG|real-tanker\.jpg|<title>undefined/);
+    assert.doesNotMatch(html,/Field media supplied by GETG|Material de campo compartido por GETG|real-tanker\.jpg|field-demonstration-01\.mp4|<title>undefined/);
     for(const [,value] of html.matchAll(/(?:src|href|poster)="([^"]+)"/g)){
       if(!value.startsWith('/')||value.startsWith('//'))continue;
       const pathname=new URL(value,'https://getg.com').pathname;
@@ -25,13 +25,17 @@ test('all localized pages resolve their local assets and links, with one H1 and 
     }
   }
 });
-test('solutions preserve the two originals and add two playable cartoon concepts; the field gallery has eight images',async()=>{
+test('the four-video lineup uses the new field overview and keeps eight gallery images',async()=>{
   assert.deepEqual(solutionVideos.slice(0,2),videos);
   assert.equal(solutionVideos.length,4);
   assert.equal(animatedVideos.length,2);
+  assert.equal(generatedVideos.length,3);
+  assert.equal(videos[0].source,'/assets/video/field-overview.mp4');
+  assert.equal(videos[1].source,'/assets/video/field-demonstration-02.mp4');
+  await assert.rejects(stat(path.join(dist,'assets/video/field-demonstration-01.mp4')),{code:'ENOENT'});
   assert.equal(fieldImages.length,8);
   assert.equal(new Set(fieldImages.map(image=>image.source)).size,8);
-  for(const video of animatedVideos){
+  for(const video of generatedVideos){
     assert.ok((await stat(path.join(dist,video.source))).size>10000);
     for(const track of video.captions){
       const vtt=await readFile(path.join(dist,track.src),'utf8');
@@ -49,7 +53,7 @@ test('solutions preserve the two originals and add two playable cartoon concepts
     for(const image of fieldImages)assert.ok(html.includes(image.source));
   }
 });
-test('both supplied videos remain visible in each language until assigned',()=>{
+test('the shared animation and unassigned supplied video are available in both languages',()=>{
   assert.equal(videos.length,2);
   assert.deepEqual(videosForLocale('en').map(v=>v.id),videosForLocale('es').map(v=>v.id));
   const categorized=[{id:'English',language:'en'},{id:'Spanish',language:'es'},{id:'Shared',language:'shared'}];

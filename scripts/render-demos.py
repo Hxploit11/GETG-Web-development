@@ -1,4 +1,4 @@
-"""Render two original, silent cartoon concept videos. Development only.
+"""Render original, silent cartoon concept videos. Development only.
 
 Requires Pillow and imageio-ffmpeg. No supplied or AI image is modified here;
 every animation frame is drawn from geometric primitives.
@@ -6,6 +6,7 @@ every animation frame is drawn from geometric primitives.
 from pathlib import Path
 import math
 import subprocess
+import argparse
 from PIL import Image, ImageDraw, ImageFont
 import imageio_ffmpeg
 
@@ -65,6 +66,74 @@ def badge(d,x,y,t):
     d.ellipse((x-radius,y-radius,x+radius,y+radius),fill=LIME,outline=INK,width=2)
     d.line((x-12,y,x-3,y+9,x+15,y-10),fill=INK,width=5)
 
+def scene_one(d,t):
+    # Field overview: a complete five-axle tanker enters, then is inspected.
+    # The tires are drawn independently from the body, always fully visible.
+    for x,y,size in [(160,275,.65),(635,260,.8),(1075,255,.6)]:
+        d.polygon([(x-40*size,y+110*size),(x,y),(x+45*size,y+110*size)],fill='#6e9581')
+        d.polygon([(x-22*size,y+98*size),(x,y+30*size),(x+24*size,y+98*size)],fill=SKY)
+        angle=.13*math.sin(t*2+x)
+        left=(x-80*size*math.cos(angle),y-80*size*math.sin(angle))
+        right=(x+80*size*math.cos(angle),y+80*size*math.sin(angle))
+        d.line([left,right],fill=GREEN,width=12)
+        d.line((left[0],left[1],left[0],y+115*size),fill='#4b7867',width=3)
+        d.ellipse((x-8,y-8,x+8,y+8),fill=LIME)
+    # Low storage tanks and a connecting pipe establish the field setting.
+    for x in [335,435]:
+        rr(d,(x,273,x+72,360),'#9bb5a6',8,outline='#698f79',width=2)
+        d.ellipse((x,263,x+72,286),fill='#c8d8ca',outline='#698f79',width=2)
+    d.line((320,361,537,361,537,383),fill=GREEN,width=9)
+    d.rectangle((0,527,W,604),fill='#b5c0af')
+    for x in range(0,W,100):d.line((x,575,x+45,575),fill='#e9eee2',width=4)
+
+    travel=min(t/2,1)
+    travel=travel*travel*(3-2*travel)
+    shift=35+100*travel
+    def box(bounds,fill,radius=10,outline=None,width=1):
+        rr(d,(bounds[0]+shift,bounds[1],bounds[2]+shift,bounds[3]),fill,radius,outline,width)
+    def line(points,fill,width):d.line([(x+shift,y) for x,y in points],fill=fill,width=width)
+    # Continuous chassis and fifth wheel connection.
+    box((62,454,1048,477),INK,5)
+    box((681,438,812,455),'#617b6d',5)
+    # Silver tank and clearly separated mounting bands.
+    box((64,314,735,443),'#8faaa3',60,INK,3)
+    box((71,321,727,427),'#cfdfd9',52)
+    box((90,333,708,365),'#eff6ee',16)
+    line([(92,404),(707,404)],'#9cb8ae',7)
+    for x in [190,350,510,665]:line([(x,320),(x,436)],'#9bb0a5',5)
+    line([(143,306),(691,306)],INK,4)
+    for x in [143,320,500,691]:line([(x,306),(x,315)],INK,3)
+    # Tractor cab faces right, matching its direction of travel.
+    box((785,303,945,454),GREEN,19,INK,3)
+    d.polygon([(922+shift,328),(976+shift,337),(1011+shift,393),(1048+shift,407),(1048+shift,455),(920+shift,455)],fill=GREEN,outline=INK,width=3)
+    box((804,321,913,366),'#a5d8d0',7)
+    d.polygon([(930+shift,341),(965+shift,347),(988+shift,384),(930+shift,384)],fill='#a5d8d0')
+    line([(932,388),(1013,388)],INK,3)
+    box((797,386,927,439),'#1b654b',8)
+    box((810,389,833,395),LIME,2)
+    box((1017,419,1047,446),'#bbd2c5',4)
+    box((1038,400,1051,410),'#fff5bd',2)
+    box((804,447,926,458),'#b6cec0',3)
+    # All five visible wheels retain intact tires, rims and rotating spokes.
+    for x in [130,218,739,827,1008]:
+        cx=x+shift;cy=491;r=36
+        d.ellipse((cx-r-3,cy-r-3,cx+r+3,cy+r+3),fill='#102b27')
+        d.ellipse((cx-r,cy-r,cx+r,cy+r),fill='#233934',outline='#53615a',width=3)
+        d.ellipse((cx-23,cy-23,cx+23,cy+23),fill='#d2dfd5',outline='#81978d',width=3)
+        for i in range(8):
+            a=i*math.tau/8+(shift-35)/r
+            d.line((cx+9*math.cos(a),cy+9*math.sin(a),cx+20*math.cos(a),cy+20*math.sin(a)),fill='#789689',width=3)
+        d.ellipse((cx-7,cy-7,cx+7,cy+7),fill=GREEN)
+    # The site inspection highlights a closed connection above the chassis.
+    box((556,437,588,458),GREEN,4,INK,2)
+    if t>=2:
+        person(d,650,540,.62,math.sin(t*2))
+        radius=30+3*math.sin(t*4)
+        cx=shift+572;cy=446
+        d.ellipse((cx-radius,cy-radius,cx+radius,cy+radius),outline=LIME,width=3)
+        d.line((cx,cy+radius,650,485),fill='#64866c',width=2)
+    if t>=4:badge(d,1140,210,t)
+
 def scene_three(d,t):
     # A simplified cutaway with explicitly illustrative buildup and flow.
     rr(d,(170,290,1100,466),INK,34)
@@ -110,14 +179,18 @@ def scene_four(d,t):
     person(d,191,468,.82)
     if t>4.5:badge(d,1096,280,t)
 
-scenes=[scene_three,scene_four]
-for index,scene in enumerate(scenes,3):
-    target=OUT/f'solution-{index:02}.mp4'
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--only',choices=['field-overview','solution-03','solution-04'])
+options=parser.parse_args()
+scenes=[(1,scene_one,'field-overview'),(3,scene_three,'solution-03'),(4,scene_four,'solution-04')]
+for index,scene,name in scenes:
+    if options.only and name!=options.only:continue
+    target=OUT/f'{name}.mp4'
     encoder=subprocess.Popen([imageio_ffmpeg.get_ffmpeg_exe(),'-y','-hide_banner','-loglevel','error','-f','rawvideo','-pix_fmt','rgb24','-s',f'{W}x{H}','-r',str(FPS),'-i','-','-an','-c:v','libx264','-preset','medium','-crf','22','-pix_fmt','yuv420p','-movflags','+faststart',str(target)],stdin=subprocess.PIPE)
     try:
         for frame in range(FPS*SECONDS):
             t=frame/FPS;im,d=base(index,t);scene(d,t)
-            if frame==FPS:im.save(POSTERS/f'solution-{index:02}.png')
+            if frame==FPS:im.save(POSTERS/f'{name}.png')
             encoder.stdin.write(im.tobytes())
     finally:encoder.stdin.close()
     if encoder.wait()!=0:raise RuntimeError(f'Video encoder failed for {target}')

@@ -1,16 +1,17 @@
-// Keep each clip independent: these are not verified translations of the same content.
-// Until their spoken languages are confirmed, both clips appear in EN and ES.
+// Keep each clip independent. The field overview is a shared, silent animation.
+// The remaining supplied clip's spoken language is unassigned for now.
 // Set language to 'en' or 'es' later. Shared/unknown clips stay visible in both locales.
 export const videos = [
   {
     id: 'field-01',
-    source: '/assets/video/field-demonstration-01.mp4',
-    poster: '/assets/concepts/oilfield-tanker.png',
-    language: 'und',
+    source: '/assets/video/field-overview.mp4',
+    poster: '/assets/concepts/field-overview.png',
+    language: 'shared',
     title: { en: 'A closer look in the field', es: 'Una mirada al trabajo en campo' },
-    description: { en: 'Explore the first field demonstration shared by GETG.', es: 'Explore la primera demostración de campo compartida por GETG.' },
-    date: '2026-10-14',
-    captions: [],
+    description: { en: 'An animated closer look at a field visit: a tanker arrives beside pumpjacks, then a technician reviews the equipment and connections.', es: 'Una mirada animada a una visita de campo: una cisterna llega junto a bombas petroleras y un técnico revisa los equipos y las conexiones.' },
+    steps: { en:['Arrive on site','Inspect equipment','Review the operation'], es:['Llegar al sitio','Inspeccionar equipos','Revisar la operación'] },
+    date: '2026-10-30',
+    captions: ['en','es'].map(language=>({language,label:language==='en'?'English':'Español',src:`/assets/video/field-overview.${language}.vtt`})),
   },
   {
     id: 'field-02',
@@ -57,3 +58,4 @@ export const animatedVideos = [
 ].map((video,i)=>({...video,id:`solution-${String(i+3).padStart(2,'0')}`,language:'shared',source:`/assets/video/solution-${String(i+3).padStart(2,'0')}.mp4`,poster:`/assets/concepts/solution-${String(i+3).padStart(2,'0')}.png`,captions:['en','es'].map(language=>({language,label:language==='en'?'English':'Español',src:`/assets/video/solution-${String(i+3).padStart(2,'0')}.${language}.vtt`}))}));
 
 export const solutionVideos = [...videos, ...animatedVideos];
+export const generatedVideos = solutionVideos.filter(video=>video.steps);
