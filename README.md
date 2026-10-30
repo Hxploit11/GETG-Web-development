@@ -32,7 +32,7 @@ The language switch preserves the equivalent page. The site includes solution ap
 
 ## Quote requests
 
-The contact and request recipient is **tom@sterlingbrandcleaners.com**. Without a configured `FORM_ENDPOINT`, a valid form prepares a `mailto:` draft. The visitor must open and send it from their email application. The site does not claim the message has been sent, send test emails, or store form entries.
+The displayed contact address is **team@getg.com**. Quote-request drafts are addressed separately to **tom@sterlingbrandcleaners.com**. Without a configured `FORM_ENDPOINT`, a valid form prepares a `mailto:` draft. The visitor must open and send it from their email application. The site does not claim the message has been sent, send test emails, or store form entries.
 
 For automatic delivery, set `FORM_ENDPOINT` to a configured HTTPS form provider endpoint that accepts multipart form data and responds with JSON. Configure its recipient as Tom, server-side validation, and spam protection in that provider. The frontend only reports successful submission after a successful HTTP response. No service credentials belong in public JavaScript.
 
@@ -55,7 +55,8 @@ The builder reads environment variables (see `.env.example`). It does not automa
 
 - `SITE_URL`: canonical production origin, default `https://getg.com`.
 - `SITE_INDEXABLE`: `false` by default; preview pages have `noindex,nofollow` and robots disallow. Set `true` only for an approved production deployment.
-- `CONTACT_EMAIL`: defaults to Tom's supplied address.
+- `CONTACT_EMAIL`: public contact address, defaults to `team@getg.com`.
+- `REQUEST_EMAIL`: quote-request recipient, defaults to Tom's supplied address. This address is included in browser-generated email drafts, not displayed as the contact address.
 - `FORM_ENDPOINT`: optional public HTTPS form endpoint. No endpoint means the email-draft workflow.
 - `PLAUSIBLE_DOMAIN` and `PLAUSIBLE_SCRIPT_URL`: optional cookieless analytics configuration. Both are required; no tracking is loaded by default. Use the exact script URL supplied by your Plausible account.
 
@@ -63,4 +64,8 @@ Analytics events contain only language, video identifiers, or a solution categor
 
 ## Hosting
 
-Publish the generated `dist/` directory on a static host that supports directory index files and MP4 byte-range responses. The local repository and preview are ready; no production domain, paid hosting, public access, or DNS changes are configured by this project. For a larger video library, replace MP4 source URLs with your video hosting/CDN URLs without changing the page templates.
+GitHub Pages builds, tests, and publishes `dist/` automatically on pushes to `codex/initial-website`. The workflow in `.github/workflows/pages.yml` can also be run manually from the Actions tab. It enables search indexing for the production origin, `https://getg.com`. The repository's Pages source must be **GitHub Actions**, with **getg.com** as the custom domain. Root-relative links assume this custom domain, not the default project URL's repository subpath.
+
+The site will be reachable at the custom domain after its DNS records point to GitHub Pages. DNS is managed separately; see [DNS setup](docs/dns-setup.md). After DNS validation and certificate provisioning finish, enable **Enforce HTTPS** in the repository's Pages settings.
+
+For a larger video library, replace MP4 source URLs with your video hosting/CDN URLs without changing the page templates.

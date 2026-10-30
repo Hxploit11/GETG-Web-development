@@ -10,7 +10,8 @@ const origin = (process.env.SITE_URL || 'https://getg.com').replace(/\/$/, '');
 if (!/^https?:\/\//.test(origin)) throw new Error('SITE_URL must be an absolute HTTP(S) URL.');
 const config = {
   formEndpoint: process.env.FORM_ENDPOINT || '',
-  contactEmail: process.env.CONTACT_EMAIL || 'tom@sterlingbrandcleaners.com',
+  contactEmail: process.env.CONTACT_EMAIL || 'team@getg.com',
+  requestEmail: process.env.REQUEST_EMAIL || 'tom@sterlingbrandcleaners.com',
   analyticsDomain: process.env.PLAUSIBLE_DOMAIN || '',
   analyticsScript: process.env.PLAUSIBLE_SCRIPT_URL || '',
 };
@@ -79,4 +80,4 @@ await writeFile(path.join(out,'index.html'),'<!doctype html><html lang="en"><hea
 await writeFile(path.join(out,'404.html'),document(content.en,'home',`<section class="section"><div class="container prose"><p class="eyebrow">404</p><h1>${content.en.notFound}</h1>${button('/en/',content.en.back)}</div></section>`));
 await writeFile(path.join(out,'robots.txt'),indexable?`User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`:'User-agent: *\nDisallow: /\n');
 await writeFile(path.join(out,'sitemap.xml'),'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+Object.keys(content).flatMap(lang=>Object.keys(pages).map(page=>`<url><loc>${origin}${url(lang,page)}</loc></url>`)).join('')+'</urlset>');
-console.log(`Built ${Object.keys(pages).length*2} localized pages in dist/. Forms: ${config.formEndpoint?'service endpoint':config.contactEmail.endsWith('.example')?'demo':'email draft'}. Search indexing: ${indexable?'enabled':'disabled'}.`);
+console.log(`Built ${Object.keys(pages).length*2} localized pages in dist/. Forms: ${config.formEndpoint?'service endpoint':config.requestEmail.endsWith('.example')?'demo':'email draft'}. Search indexing: ${indexable?'enabled':'disabled'}.`);

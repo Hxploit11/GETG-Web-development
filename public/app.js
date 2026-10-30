@@ -56,14 +56,14 @@
       const status=form.querySelector('.form-status');
       if(!config.formEndpoint){
         status.className='form-status visible';
-        if(config.contactEmail.endsWith('.example')){status.textContent=es?'Vista previa completa. Sus datos no se guardaron ni enviaron.':'Preview complete. Your details were not saved or sent.';return;}
+        if(config.requestEmail.endsWith('.example')){status.textContent=es?'Vista previa completa. Sus datos no se guardaron ni enviaron.':'Preview complete. Your details were not saved or sent.';return;}
         const values=new FormData(form);
         const labels=es?['Nombre','Empresa','Correo','País','Solución','Mensaje']:['Name','Company','Email','Country','Solution','Message'];
         const fields=['name','company','email','country','solution','message'];
         const body=fields.map((key,i)=>`${labels[i]}: ${key==='solution'?select.selectedOptions[0].textContent:values.get(key)}`).join('\n');
         const subject=es?'GETG — Solicitud de cotización o información':'GETG — Quote or solution information request';
         status.textContent=es?'Su borrador está listo. Ábralo y envíelo desde su aplicación de correo. La solicitud aún no se ha enviado.':'Your draft is ready. Open it and send it from your email app. Your request has not been sent yet.';
-        const draft=document.createElement('a');draft.className='draft-link';draft.href=`mailto:${config.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const draft=document.createElement('a');draft.className='draft-link';draft.href=`mailto:${config.requestEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         draft.textContent=es?'Abrir borrador de correo →':'Open email draft →';
         status.append(document.createElement('br'),draft);
         return;

@@ -30,6 +30,17 @@ test('both supplied videos remain visible in each language until assigned',()=>{
   const categorized=[{id:'English',language:'en'},{id:'Spanish',language:'es'},{id:'Shared',language:'shared'}];
   assert.deepEqual(videosForLocale('es',categorized).map(v=>v.id),['Spanish','Shared']);
 });
+test('public contact is separate from the quote-request recipient in both languages',async()=>{
+  for(const route of routes){
+    const html=await readFile(path.join(dist,route,'index.html'),'utf8');
+    const config=JSON.parse(html.match(/<script id="site-config" type="application\/json">(.*?)<\/script>/s)[1]);
+    assert.equal(config.contactEmail,'team@getg.com');
+    assert.equal(config.requestEmail,'tom@sterlingbrandcleaners.com');
+    const visible=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,'');
+    assert.doesNotMatch(visible,/tom@sterlingbrandcleaners\.com/);
+    if(html.includes('class="quote-form"'))assert.match(visible,/href="mailto:team@getg\.com">team@getg\.com/);
+  }
+});
 test('video ranges support seeking, suffix requests, and invalid bounds',()=>{
   assert.deepEqual(parseRange('bytes=10-20',100),{start:10,end:20});
   assert.deepEqual(parseRange('bytes=-10',100),{start:90,end:99});
