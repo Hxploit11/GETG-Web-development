@@ -24,11 +24,14 @@ The deployable static files are in `dist/`. Run the build before tests. The serv
 | English | Spanish |
 | --- | --- |
 | `/en/` | `/es/` |
+| `/en/who-we-are/` | `/es/quienes-somos/` |
 | `/en/solutions/` | `/es/soluciones/` |
 | `/en/in-the-field/` | `/es/en-campo/` |
 | `/en/privacy/` | `/es/privacidad/` |
 
-The language switch preserves the equivalent page. The site includes solution application sections, two supplied videos, a field-photo gallery, a keyboard-accessible video modal, a responsive navigation menu, and quote requests.
+The language switch preserves the equivalent page. Navigation is Who we are, Solutions, and In the field. The site includes application image slideshows, a four-video solution carousel, an eight-image field gallery, a keyboard-accessible video modal, and quote requests.
+
+Slideshows advance every six seconds while in view. They pause on hover, keyboard focus, or when the tab is hidden or a video dialog is open. Previous/next, direct slide selection, and a pause button are available. Manual selection stops automatic advancement until resumed. Reduced-motion preferences disable automatic advancement and video previews. Muted video previews rotate with the slides; opening a video plays it in a dialog without the six-second cutoff.
 
 ## Quote requests
 
@@ -40,14 +43,21 @@ For automatic delivery, set `FORM_ENDPOINT` to a configured HTTPS form provider 
 
 - `src/content.mjs`: English/Spanish page copy, solution discussion areas, form labels.
 - `src/media.mjs`: independent video records, title translations, posters, caption tracks, and language eligibility.
+- `src/editorial.mjs`: bilingual Who we are and slideshow copy.
+- `src/components.mjs`: slideshow and new page templates.
 - `public/assets/`: optimized concept imagery, supplied field photos, logo.
-- `public/assets/video/`: the two original supplied MP4 files.
+- `public/assets/concepts/`: six new AI photographs and two cartoon posters.
+- `public/assets/video/`: two supplied MP4 files and two silent, six-second cartoon concepts.
 - `scripts/build.mjs`: templates, metadata, localized routes, and sitemap generation.
-- `public/app.js` and `public/styles.css`: interactions and responsive design.
+- `public/app.js`, `public/carousel.js`, and `public/styles.css`: interactions and responsive design.
 
-Both videos are currently marked `language: 'und'` and intentionally appear in both languages, per the user's request. Once narration is identified, assign `en` or `es`; shared/unknown clips remain visible in both. These clips are not assumed to be translated equivalents. Add verified caption files through each video's `captions` array. No transcript or subtitles have been fabricated.
+The two supplied videos are currently marked `language: 'und'` and intentionally appear in both languages, per the user's request. Once narration is identified, assign `en` or `es`; shared/unknown clips remain visible in both. These clips are not assumed to be translated equivalents. No transcript or captions have been fabricated for the originals. The two new cartoons are language-neutral, with English/Spanish step captions generated during the build. The homepage demo button opens the new flow illustration.
 
 The field photographs and videos were supplied by the user. The sunset hero, barrel detail, and technician concept are AI-generated and labeled as such. They do not establish actual product capabilities, results, or facilities. Solution categories and descriptions are provisional discussion copy pending GETG review.
+
+Six additional photographs were created with the built-in image-generation tool. Exact prompts are saved in `docs/placeholder-image-prompts.json`. The field gallery combines these six images with the two supplied photographs. The requested supplied-media credit has been removed from the UI; generated photographs retain a small AI concept label.
+
+The two new cartoons illustrate flow restrictions and water separation. They are original locally rendered motion graphics, not AI-generated video or technical performance evidence. Regenerate them with `python scripts/render-demos.py` after installing Pillow and imageio-ffmpeg in a development environment. They use no audio, avoid embedded English copy, and are exported as H.264 MP4 with fast-start metadata. Node.js builds and GitHub Pages use the committed video files and do not require Python. Who we are copy is editable brand positioning, with no invented company history, credentials, or customer statistics.
 
 ## Build configuration
 

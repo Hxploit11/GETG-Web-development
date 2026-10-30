@@ -29,6 +29,11 @@
     player.pause();
     if(player.getAttribute('src')!==media.source){player.src=media.source;player.poster=media.poster;player.load();}
     player.dataset.videoId=media.id;
+    player.querySelectorAll('track').forEach(track=>track.remove());
+    media.captions.forEach(caption=>{
+      const track=document.createElement('track');track.kind='captions';track.src=caption.src;track.srclang=caption.language;track.label=caption.label;track.default=caption.language===config.locale;player.append(track);
+    });
+    dialog.querySelector('[data-modal-note]').textContent=media.steps?config.animationNote:config.transcriptNote;
     document.querySelector('#video-dialog-title').textContent=media.title[config.locale];
     dialog.querySelectorAll('[data-switch-video]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.switchVideo===id)));
     if(shouldPlay)player.play().catch(()=>{});
@@ -39,12 +44,6 @@
   dialog.addEventListener('close',()=>{player.pause();document.body.classList.remove('modal-open');openedBy?.focus();});
   dialog.querySelectorAll('[data-switch-video]').forEach(button=>button.addEventListener('click',()=>setVideo(button.dataset.switchVideo,true)));
   document.querySelectorAll('video').forEach(video=>video.addEventListener('play',()=>{document.querySelectorAll('video').forEach(other=>{if(other!==video)other.pause();});track('Video play',{video:video.dataset.videoId||'field-demo'});}));
-
-  const slides=[...document.querySelectorAll('[data-gallery-slide]')];
-  let slideIndex=0;
-  const moveSlide=delta=>{slideIndex=(slideIndex+delta+slides.length)%slides.length;slides.forEach((slide,i)=>slide.hidden=i!==slideIndex);document.querySelector('.gallery-count').textContent=`${String(slideIndex+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`;};
-  document.querySelector('[data-gallery-prev]')?.addEventListener('click',()=>moveSlide(-1));
-  document.querySelector('[data-gallery-next]')?.addEventListener('click',()=>moveSlide(1));
 
   const requestedSolution=new URLSearchParams(location.search).get('solution');
   document.querySelectorAll('.quote-form').forEach(form=>{
