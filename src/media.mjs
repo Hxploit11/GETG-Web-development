@@ -5,7 +5,7 @@ export const videos = [
   {
     id: 'field-01',
     source: '/assets/video/field-demonstration-01.mp4',
-    poster: '/assets/real-tanker.jpg',
+    poster: '/assets/concepts/oilfield-tanker.png',
     language: 'und',
     title: { en: 'A closer look in the field', es: 'Una mirada al trabajo en campo' },
     description: { en: 'Explore the first field demonstration shared by GETG.', es: 'Explore la primera demostración de campo compartida por GETG.' },
@@ -46,7 +46,7 @@ export const solutionImages = {
 };
 
 export const fieldImages = [
-  {id:'tanker',source:'/assets/real-tanker.jpg',title:{en:'Tanker on location',es:'Cisterna en el lugar'},alt:{en:'Silver tanker at a field location',es:'Cisterna plateada en una ubicación de campo'}},
+  {id:'tanker',generated:true,source:'/assets/concepts/oilfield-tanker.png',title:{en:'Tanker at the oilfield',es:'Cisterna junto al campo petrolero'},alt:{en:'AI concept of a complete tanker truck with visible tires beside oilfield pumpjacks',es:'Concepto con IA de un camión cisterna completo con neumáticos visibles junto a bombas petroleras'}},
   {id:'truck',source:'/assets/real-truck.jpg',rotate:true,title:{en:'Equipment in the field',es:'Equipo en campo'},alt:{en:'Field service truck',es:'Camión de servicio en campo'}},
   ...conceptImages,
 ];

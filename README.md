@@ -46,7 +46,7 @@ For automatic delivery, set `FORM_ENDPOINT` to a configured HTTPS form provider 
 - `src/editorial.mjs`: bilingual Who we are and slideshow copy.
 - `src/components.mjs`: slideshow and new page templates.
 - `public/assets/`: optimized concept imagery, supplied field photos, logo.
-- `public/assets/concepts/`: six new AI photographs and two cartoon posters.
+- `public/assets/concepts/`: seven new AI photographs and two cartoon posters.
 - `public/assets/video/`: two supplied MP4 files and two silent, six-second cartoon concepts.
 - `scripts/build.mjs`: templates, metadata, localized routes, and sitemap generation.
 - `public/app.js`, `public/carousel.js`, and `public/styles.css`: interactions and responsive design.
@@ -55,7 +55,7 @@ The two supplied videos are currently marked `language: 'und'` and intentionally
 
 The field photographs and videos were supplied by the user. The sunset hero, barrel detail, and technician concept are AI-generated and labeled as such. They do not establish actual product capabilities, results, or facilities. Solution categories and descriptions are provisional discussion copy pending GETG review.
 
-Six additional photographs were created with the built-in image-generation tool. Exact prompts are saved in `docs/placeholder-image-prompts.json`. The field gallery combines these six images with the two supplied photographs. The requested supplied-media credit has been removed from the UI; generated photographs retain a small AI concept label.
+Seven additional photographs were created with the built-in image-generation tool. Exact prompts are saved in `docs/placeholder-image-prompts.json`. The field gallery combines these seven images with the supplied service-truck photograph. The original tanker photograph was replaced with a generated complete tanker truck near pumpjacks, with visible tires; the same replacement is used as the first field-video poster. The requested supplied-media credit has been removed from the UI; generated photographs retain a small AI concept label.
 
 The two new cartoons illustrate flow restrictions and water separation. They are original locally rendered motion graphics, not AI-generated video or technical performance evidence. Regenerate them with `python scripts/render-demos.py` after installing Pillow and imageio-ffmpeg in a development environment. They use no audio, avoid embedded English copy, and are exported as H.264 MP4 with fast-start metadata. Node.js builds and GitHub Pages use the committed video files and do not require Python. Who we are copy is editable brand positioning, with no invented company history, credentials, or customer statistics.
 
@@ -63,7 +63,7 @@ The two new cartoons illustrate flow restrictions and water separation. They are
 
 The builder reads environment variables (see `.env.example`). It does not automatically load `.env` files. To load one with a supported Node release, use `node --env-file=.env scripts/build.mjs`.
 
-- `SITE_URL`: canonical production origin, default `https://getg.com`.
+- `SITE_URL`: canonical production origin, default `https://getgusa.com`.
 - `SITE_INDEXABLE`: `false` by default; preview pages have `noindex,nofollow` and robots disallow. Set `true` only for an approved production deployment.
 - `CONTACT_EMAIL`: public contact address, defaults to `team@getg.com`.
 - `REQUEST_EMAIL`: quote-request recipient, defaults to Tom's supplied address. This address is included in browser-generated email drafts, not displayed as the contact address.
@@ -74,8 +74,8 @@ Analytics events contain only language, video identifiers, or a solution categor
 
 ## Hosting
 
-GitHub Pages builds, tests, and publishes `dist/` automatically on pushes to `codex/initial-website`. The workflow in `.github/workflows/pages.yml` can also be run manually from the Actions tab. It enables search indexing for the production origin, `https://getg.com`. The repository's Pages source must be **GitHub Actions**, with **getg.com** as the custom domain. Root-relative links assume this custom domain, not the default project URL's repository subpath.
+GitHub Pages builds, tests, and publishes `dist/` automatically on pushes to `codex/initial-website`. The workflow in `.github/workflows/pages.yml` can also be run manually from the Actions tab. It enables search indexing and reads the production origin from the configured GitHub Pages domain. The repository's Pages source must be **GitHub Actions**, with **getgusa.com** as the custom domain. Root-relative links assume this custom domain, not the default project URL's repository subpath.
 
-The site will be reachable at the custom domain after its DNS records point to GitHub Pages. DNS is managed separately; see [DNS setup](docs/dns-setup.md). After DNS validation and certificate provisioning finish, enable **Enforce HTTPS** in the repository's Pages settings.
+The site will be reachable at the custom domain after its DNS records point to GitHub Pages. DNS is managed separately; see [DNS setup](docs/dns-setup.md). The confirmed domain is `getgusa.com`, and HTTPS enforcement is enabled.
 
 For a larger video library, replace MP4 source URLs with your video hosting/CDN URLs without changing the page templates.

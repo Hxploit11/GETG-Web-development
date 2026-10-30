@@ -9,7 +9,7 @@ const copy=Object.fromEntries(Object.entries(content).map(([locale,c])=>[locale,
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const out = path.join(root, 'dist');
-const origin = (process.env.SITE_URL || 'https://getg.com').replace(/\/$/, '');
+const origin = (process.env.SITE_URL || 'https://getgusa.com').replace(/\/$/, '');
 if (!/^https?:\/\//.test(origin)) throw new Error('SITE_URL must be an absolute HTTP(S) URL.');
 const config = {
   formEndpoint: process.env.FORM_ENDPOINT || '',
@@ -59,7 +59,7 @@ function privacy(c) {
 }
 function modal(c) {
   const v = animatedVideos[0];
-  return `<dialog class="video-dialog" aria-labelledby="video-dialog-title"><div class="dialog-heading"><div><p class="eyebrow">${c.videoLabel}</p><h2 id="video-dialog-title">${v?.title[c.locale]||c.demo}</h2></div><button class="circle-button modal-close" aria-label="${c.close}">×</button></div><video controls playsinline preload="none" poster="${v?.poster||'/assets/real-tanker.jpg'}" data-modal-video><source src="${v?.source||''}" type="video/mp4"></video><p class="media-note" data-modal-note>${c.animationNote}</p><div class="dialog-links">${videosForLocale(c.locale,solutionVideos).map((entry,i)=>`<button data-switch-video="${entry.id}">${String(i+1).padStart(2,'0')} · ${entry.title[c.locale]}</button>`).join('')}</div></dialog>`;
+  return `<dialog class="video-dialog" aria-labelledby="video-dialog-title"><div class="dialog-heading"><div><p class="eyebrow">${c.videoLabel}</p><h2 id="video-dialog-title">${v?.title[c.locale]||c.demo}</h2></div><button class="circle-button modal-close" aria-label="${c.close}">×</button></div><video controls playsinline preload="none" poster="${v?.poster||'/assets/concepts/oilfield-tanker.png'}" data-modal-video><source src="${v?.source||''}" type="video/mp4"></video><p class="media-note" data-modal-note>${c.animationNote}</p><div class="dialog-links">${videosForLocale(c.locale,solutionVideos).map((entry,i)=>`<button data-switch-video="${entry.id}">${String(i+1).padStart(2,'0')} · ${entry.title[c.locale]}</button>`).join('')}</div></dialog>`;
 }
 function document(c, page, body) {
   const title = page==='home'?`GETG | ${c.footer}`:`${c[page==='field'?'field':page]} | GETG`;

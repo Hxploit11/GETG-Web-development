@@ -16,7 +16,7 @@ test('all localized pages resolve their local assets and links, with one H1 and 
     assert.match(html,/<link rel="alternate" hreflang="en"/);
     assert.match(html,/<link rel="alternate" hreflang="es"/);
     assert.doesNotMatch(html,/>Products</);
-    assert.doesNotMatch(html,/Field media supplied by GETG|Material de campo compartido por GETG|<title>undefined/);
+    assert.doesNotMatch(html,/Field media supplied by GETG|Material de campo compartido por GETG|real-tanker\.jpg|<title>undefined/);
     for(const [,value] of html.matchAll(/(?:src|href|poster)="([^"]+)"/g)){
       if(!value.startsWith('/')||value.startsWith('//'))continue;
       const pathname=new URL(value,'https://getg.com').pathname;
